@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Card from '../UI/Card';
 import Button from '../UI/Button';
@@ -6,12 +6,18 @@ import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+  const nameInputRef=useRef()
+  const ageInputRef=useRef()
+  const collegeInputRef=useRef()
+
   const [error, setError] = useState();
 
   const addUserHandler = (event) => {
     event.preventDefault();
+    const enteredUsername=nameInputRef.current.value;
+    const enteredAge=ageInputRef.current.value;
+    const enteredCollege=collegeInputRef.current.value;
+
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
       setError({
         title: 'Invalid input',
@@ -26,18 +32,10 @@ const AddUser = (props) => {
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('');
+    props.onAddUser(enteredUsername, enteredAge,enteredCollege);
+    
   };
 
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
-  };
 
   const errorHandler = () => {
     setError(null);
@@ -58,15 +56,22 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            value={enteredUsername}
-            onChange={usernameChangeHandler}
+           
+            ref={nameInputRef}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+          
+            ref={ageInputRef}
+          />
+          <label htmlFor="college">College</label>
+          <input
+            id="college"
+            type="text"
+          
+            ref={collegeInputRef}
           />
           <Button type="submit">Add User</Button>
         </form>
