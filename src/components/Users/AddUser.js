@@ -1,4 +1,4 @@
-import React, { useRef, useState, useReducer ,useEffect} from "react";
+import React, { useRef, useState, useReducer} from "react";
 
 import Card from "../UI/Card";
 import Button from "../UI/Button";
@@ -9,43 +9,32 @@ const reducerfun=()=>{
   }
 }
 const AddUser = (props) => {
-  const nameInputRef = useRef();
-  const ageInputRef = useRef();
-  const collegeInputRef = useRef();
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+  // const collegeInputRef = useRef();
   const [error, setError] = useState();
 
-  useEffect(()=>{
-    const timer=setTimeout(()=>{
-    if(nameInputRef.current.value.length<10){ 
-      setError({
-           title: 'Invalid input',
-           message: ' College name  length must be of more than 10 letters'
-         })
-      console.log("clean up")
-    }},5000)
-  return ()=>{ clearTimeout(timer)}
-  },[collegeInputRef.current.value.length])
   const AddUserHandler = (event) => {
     event.preventDefault();
-    const enteredUsername = nameInputRef.current.value;
-    const enteredAge = ageInputRef.current.value;
-    const enteredCollege = collegeInputRef.current.value;
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
+   
   
-    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0 || enteredCollege.trim().length === 0) {
+    if (!enteredEmail.includes('@') ) {
       setError({
         title: "Invalid input",
-        message: "Please enter a valid name,age (non-empty values)  and college.",
+        message: "Please enter a valid Email address.",
       });
       return;
     }
-    if (+enteredAge < 1) {
+    if (+enteredPassword.length < 8) {
       setError({
-        title: "Invalid age",
-        message: "Please enter a valid age (> 0).",
+        title: "Invalid password",
+        message: "Pasword must be 8 characters long.",
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge, enteredCollege);
+    props.onAddUser(enteredEmail, enteredPassword);
   };
 
   const errorHandler = () => {
@@ -67,8 +56,8 @@ const AddUser = (props) => {
           <input id="username" type="text" ref={nameInputRef} />
           <label htmlFor="age">Age (Years)</label>
           <input id="age" type="number" ref={ageInputRef} />
-          <label htmlFor="college">College</label>
-          <input id="college" type="text" ref={collegeInputRef} />
+          {/* <label htmlFor="college">College</label>
+          <input id="college" type="text" ref={collegeInputRef} /> */}
           <Button type="submit">Add User</Button>
         </form>
       </Card>
